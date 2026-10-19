@@ -83,7 +83,7 @@ export default function Staff() {
       <div className="page-head">
         <div>
           <h1>Staff Management</h1>
-          <p>{users.length} accounts with portal access</p>
+          <p>{users.filter((u) => u.role === "staff").length} staff accounts</p>
         </div>
         <button className="btn" onClick={openCreate}>+ Add Staff</button>
       </div>
@@ -104,7 +104,7 @@ export default function Staff() {
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => {
+           {users.filter((u) => u.role === "staff").map((u) => {
               const id = u.id || u._id;
               return (
                 <tr key={id}>
@@ -202,14 +202,11 @@ export default function Staff() {
               </div>
               <div className="field">
                 <label>Role</label>
-                <select
-                  className="input"
-                  value={form.role}
-                  onChange={(e) => setForm({ ...form, role: e.target.value })}
-                >
-                  <option value="staff">Staff (billing only)</option>
-                  <option value="admin">Admin (full access)</option>
-                </select>
+                <input
+  className="input"
+  value="Staff (billing only)"
+  disabled
+/>
               </div>
             </div>
           </form>

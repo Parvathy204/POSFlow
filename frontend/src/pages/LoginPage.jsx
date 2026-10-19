@@ -112,23 +112,6 @@ export default function LoginPage() {
           {loading ? "Signing in..." : "Sign in"}
         </button>
 
-        <div
-          style={{
-            marginTop: 20,
-            padding: "12px 14px",
-            background: "var(--bg)",
-            borderRadius: 8,
-            fontSize: 12.5,
-            color: "var(--muted)",
-            lineHeight: 1.7,
-          }}
-        >
-          <strong style={{ color: "var(--ink-2)" }}>Demo accounts</strong>
-          <br />
-          Admin: admin@posflow.com / admin123
-          <br />
-          Staff: staff@posflow.com / staff123
-        </div>
 
         <p
           style={{

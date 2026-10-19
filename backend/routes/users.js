@@ -53,7 +53,8 @@ router.post("/", async (req, res) => {
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       phone: phone || "",
-      role: role === "admin" ? "admin" : "staff",
+     role: "staff",
+isActive: true,
     });
 
     res.status(201).json(sanitize(user));
@@ -74,6 +75,11 @@ router.put("/:id", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Staff member not found" });
     }
+    if (user.role === "admin") {
+  return res.status(403).json({
+    message: "You cannot edit an admin account here",
+  });
+}
 
     if (name !== undefined && name.trim()) user.name = name.trim();
     if (email !== undefined && email.trim()) {
@@ -123,10 +129,21 @@ router.delete("/:id", async (req, res) => {
         .json({ message: "You cannot delete your own account" });
     }
 
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "Staff member not found" });
-    }
+   const user = await User.findById(req.params.id);
+
+if (!user) {
+  return res.status(404).json({
+    message: "Staff member not found",
+  });
+}
+
+if (user.role === "admin") {
+  return res.status(403).json({
+    message: "You cannot delete an admin account here",
+  });
+}
+
+await User.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Staff member deleted" });
   } catch {

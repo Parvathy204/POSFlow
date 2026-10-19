@@ -56,7 +56,7 @@ export default function App() {
         <Route path="reports" element={<Reports />} />
       </Route>
 
-      {/* Billing portal (staff + admin) */}
+   
       <Route
         path="/billing/*"
         element={

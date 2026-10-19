@@ -184,11 +184,23 @@ export default function Suppliers() {
               <div className="field">
                 <label>Phone *</label>
                 <input
-                  className="input"
-                  required
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                />
+  className="input"
+  type="tel"
+  required
+  maxLength={10}
+  pattern="[6-9][0-9]{9}"
+  title="Enter a valid 10-digit Indian mobile number"
+  value={form.phone}
+  onChange={(e) =>
+    setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })
+  }
+/>
+{form.phone.length > 0 &&
+  !/^[6-9]\d{9}$/.test(form.phone) && (
+    <small style={{ color: "#dc2626" }}>
+      Please enter a valid 10-digit phone number.
+    </small>
+  )}
               </div>
             </div>
             <div className="field">
@@ -211,10 +223,22 @@ export default function Suppliers() {
             <div className="field">
               <label>GST number</label>
               <input
-                className="input"
-                value={form.gstNumber}
-                onChange={(e) => setForm({ ...form, gstNumber: e.target.value })}
-              />
+  className="input"
+  type="text"
+  maxLength={15}
+  pattern="[0-9A-Za-z]{15}"
+  title="GSTIN must contain exactly 15 letters and numbers"
+  value={form.gstNumber}
+  onChange={(e) =>
+    setForm({ ...form, gstNumber: e.target.value.toUpperCase().slice(0, 15) })
+  }
+/>
+{form.gstNumber.length > 0 &&
+  !/^[0-9A-Z]{15}$/.test(form.gstNumber) && (
+    <small style={{ color: "#dc2626" }}>
+      GSTIN must contain exactly 15 letters and numbers.
+    </small>
+  )}
             </div>
             <div className="field">
               <label>Notes</label>
