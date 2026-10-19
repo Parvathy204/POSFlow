@@ -19,7 +19,7 @@ async function connectDB() {
     try {
       await mongoose.connect(uri, { serverSelectionTimeoutMS: 6000 });
       console.log(`MongoDB connected: ${redact(uri)}`);
-      return;
+      return { inMemory: false };
     } catch (error) {
       if (!allowFallback) throw error;
       console.warn(
@@ -41,6 +41,7 @@ async function connectDB() {
   // Mongoose transactions require a replica set, hence MongoMemoryReplSet.
   await mongoose.connect(replSet.getUri("posflow"));
   console.log("In-memory MongoDB (replica set) ready");
+  return { inMemory: true };
 }
 
 function redact(uri) {

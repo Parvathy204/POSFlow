@@ -49,7 +49,19 @@ if (fs.existsSync(distPath)) {
 
 async function start() {
   try {
-    await connectDB();
+    const { inMemory } = await connectDB();
+
+    // The in-memory fallback starts empty every run, so auto-seed it once so
+    // the demo accounts and products always exist for reviewers.
+    if (inMemory) {
+      const User = require("./models/user");
+      const userCount = await User.countDocuments();
+      if (userCount === 0) {
+        console.log("Empty in-memory database - seeding demo data...");
+        const { seedDatabase } = require("./lib/seedData");
+        await seedDatabase();
+      }
+    }
 
     const port = process.env.PORT || 5000;
     app.listen(port, () => {

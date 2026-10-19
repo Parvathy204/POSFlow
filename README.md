@@ -73,20 +73,25 @@ _Deploy by pushing this repo to GitHub and creating a Render Blueprint
 # 1. Install dependencies
 npm run install:all
 
-# 2. Seed demo data (products, staff, 14 days of sales, returns, ledger)
+# 2. Seed demo data (only needed with a persistent MongoDB)
 npm run seed
 
-# 3. Run both servers (Express on :5000, Vite on :5173)
-npm run dev
+# 3. Run the API (Express on :5000) - terminal 1
+npm run dev:backend
+
+# 4. Run the React dev server (Vite on :5173) - terminal 2
+npm run dev:frontend
 ```
 
 Open http://localhost:5173 — the Vite dev server proxies `/api` to Express.
+(Or run `npm run build` then `npm start` to serve everything from :5000.)
 
 > **No MongoDB needed locally:** if `MONGO_URI` is unset or unreachable, the
-> backend automatically starts an in-memory MongoDB (replica set) so everything
-> works out of the box. Data resets on restart — run `npm run seed` to repopulate.
-> For a persistent local database, install MongoDB or use a free Atlas cluster and
-> set `MONGO_URI` in `backend/.env` (see `backend/.env.example`).
+> backend automatically starts an in-memory MongoDB (replica set) **and seeds
+> the demo accounts/products on first start**, so everything works out of the box.
+> Data resets on restart. For a persistent local database, install MongoDB or
+> use a free Atlas cluster and set `MONGO_URI` in `backend/.env`
+> (see `backend/.env.example`), then run `npm run seed` once.
 
 ### Production build (single service)
 
@@ -136,6 +141,7 @@ cd backend && npm start   # Express serves the API + the built app on one port
 backend/
   config/db.js         # DB connect + in-memory fallback
   lib/txn.js           # transactions with standalone-mongod fallback
+  lib/seedData.js      # demo data (auto-seeded for the in-memory DB)
   middleware/auth.js   # JWT auth + admin guard
   models/              # User, Product, Supplier, Transaction, Return, LedgerEntry
   routes/              # auth, users, products, suppliers, transactions, returns, ledger, reports
