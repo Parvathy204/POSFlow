@@ -1,0 +1,21 @@
+# Render blueprint: single web service that builds the frontend, serves it
+# from Express, and uses MongoDB Atlas for storage.
+#
+# Deploy: push this repo to GitHub, then in Render choose
+# "New +" -> "Blueprint" and pick the repo. Set the MONGO_URI and JWT_SECRET
+# environment variables (or let Render create the managed MongoDB).
+services:
+  - type: web
+    name: posflow
+    runtime: node
+    buildCommand: cd backend && npm install && cd ../frontend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
+      - key: PORT
+        value: 10000
