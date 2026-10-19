@@ -50,14 +50,21 @@ POSFlow covers the full retail billing cycle:
 
 ## 3. Live / demo URL
 
-_Deploy by pushing this repo to GitHub and creating a Render Blueprint
-(`render.yaml` is included). See "Deployment" below._ → **https://posflow.onrender.com** _(update after deploying)_
+The project source code is available in this public GitHub repository. Live deployment is not yet configured.
+
+Source code: https://github.com/Parvathy204/POSFlow
+
+Local application: http://localhost:5173 (available when running locally)
 
 ## 4. Mobile UI URL
 
-- **https://posflow.onrender.com/mobile** — complete Admin Portal in mobile layout
-- Desktop admin: **https://posflow.onrender.com/admin**
-- Billing portal: **https://posflow.onrender.com/billing**
+Local mobile admin UI: http://localhost:5173/mobile
+
+Local desktop admin portal: http://localhost:5173/admin
+
+Local billing portal: http://localhost:5173/billing
+
+The local URLs are accessible only while the application is running on the development computer.
 
 ## 5. Test credentials
 
