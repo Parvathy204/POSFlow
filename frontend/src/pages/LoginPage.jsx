@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  ArrowLeft,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -207,11 +206,6 @@ export default function LoginPage() {
 
       <section className="signin-panel">
         <div className="signin-form-wrap">
-          <Link to="/" className="signin-back">
-            <ArrowLeft size={14} aria-hidden="true" />
-            Back to website
-          </Link>
-
           <div className="signin-mobile-brand">
             <Brand compact />
           </div>
