@@ -87,7 +87,7 @@ The local URLs are accessible only while the application is running on the devel
 | --- | --- | --- |
 | Admin | `admin@posflow.com` | `admin123` |
 | Staff | `staff@posflow.com` | `staff123` |
-| Staff | `deepa@posflow.com` | `staff123` |
+| Staff | `pranu12@gmail.com` | `kannan12` |
 
 ## 6. Local setup
 
