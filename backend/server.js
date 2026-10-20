@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const { connectDB } = require("./config/db");
@@ -20,8 +21,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Always answers 200 so a database blip doesn't make Render fail the deploy,
+// but reports the live connection state so a broken DB is visible at a glance.
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", time: new Date().toISOString() });
+  const state = mongoose.connection.readyState; // 1 = connected
+  res.json({
+    status: state === 1 ? "ok" : "degraded",
+    db: state === 1 ? "connected" : "disconnected",
+    time: new Date().toISOString(),
+  });
 });
 
 app.use("/api/auth", authRoutes);
