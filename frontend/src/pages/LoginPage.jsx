@@ -2,15 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
+  BarChart3,
   CheckCircle2,
   Eye,
   EyeOff,
+  Home,
   LockKeyhole,
   Mail,
   MapPin,
+  MoreHorizontal,
+  Package,
   ReceiptText,
   ShieldCheck,
-  UserRound,
   Zap,
 } from "lucide-react";
 import "../signin.css";
@@ -30,6 +33,74 @@ function Brand({ compact = false }) {
   );
 }
 
+function MobilePreview() {
+  return (
+    <div className="signin-device-wrap" aria-hidden="true">
+      <span className="signin-float signin-float-top">
+        <CheckCircle2 size={13} />
+        Stock synced
+      </span>
+
+      <div className="signin-phone">
+        <div className="signin-phone-screen">
+          <div className="signin-phone-notch" />
+          <div className="signin-phone-top">
+            <span>POSFlow</span>
+            <span>Hi, Priya</span>
+          </div>
+
+          <div className="signin-phone-body">
+            <div className="signin-phone-greet">Store overview</div>
+
+            <div className="signin-phone-stats">
+              <div className="signin-phone-stat">
+                <small>Today</small>
+                <strong>₹12,480</strong>
+              </div>
+              <div className="signin-phone-stat">
+                <small>Bills</small>
+                <strong>18</strong>
+              </div>
+            </div>
+
+            <div className="signin-phone-chart">
+              <i style={{ height: "32%" }} />
+              <i style={{ height: "58%" }} />
+              <i style={{ height: "46%" }} />
+              <i style={{ height: "74%" }} />
+              <i style={{ height: "64%" }} />
+              <i style={{ height: "92%" }} />
+              <i style={{ height: "78%" }} />
+            </div>
+
+            <div className="signin-phone-section">Low stock</div>
+            <div className="signin-phone-row">
+              <span>Silk Saree · Emerald</span>
+              <b>2 left</b>
+            </div>
+            <div className="signin-phone-row">
+              <span>Cotton Kurta · Indigo</span>
+              <b>4 left</b>
+            </div>
+
+            <div className="signin-phone-tabs">
+              <Home className="active" />
+              <Package />
+              <BarChart3 />
+              <MoreHorizontal />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <span className="signin-float signin-float-bottom">
+        <BarChart3 size={13} />
+        Daily report ready
+      </span>
+    </div>
+  );
+}
+
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -37,13 +108,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [demoNotice, setDemoNotice] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
-    setDemoNotice("");
     setLoading(true);
 
     try {
@@ -58,13 +127,6 @@ export default function LoginPage() {
     }
   }
 
-  function fillDemo(demoEmail, demoPassword, label) {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setError("");
-    setDemoNotice(`${label} details filled. Press Sign in to continue.`);
-  }
-
   return (
     <main className="signin-page">
       <section className="signin-visual" aria-label="About POSFlow">
@@ -74,62 +136,21 @@ export default function LoginPage() {
           <div className="signin-visual-main">
             <span className="signin-kicker">
               <span className="signin-pulse" aria-hidden="true" />
-              Textile retail, in rhythm
+              Textile retail, without the friction
             </span>
 
             <h1>
-              One counter.
+              Run the shop.
               <br />
-              <span>Every sale in sync.</span>
+              <span>Not the paperwork.</span>
             </h1>
 
             <p className="signin-lede">
-              Billing, stock, staff and books — connected in one fast, focused
-              workspace.
+              Billing, inventory, staff and daily reports — together in one
+              calm, quick workspace.
             </p>
 
-            <div className="signin-receipt" aria-hidden="true">
-              <div className="signin-receipt-head">
-                <span>Bill preview</span>
-                <span className="signin-live">
-                  <i />
-                  Live
-                </span>
-              </div>
-
-              <div className="signin-receipt-meta">
-                <span>
-                  <small>Invoice</small>
-                  <strong>INV-2048</strong>
-                </span>
-                <span>
-                  <small>Counter</small>
-                  <strong>Coimbatore</strong>
-                </span>
-              </div>
-
-              <div className="signin-receipt-items">
-                <span>
-                  Silk Saree · Emerald <b>₹2,799</b>
-                </span>
-                <span>
-                  Cotton Kurta · Indigo <b>₹899</b>
-                </span>
-              </div>
-
-              <div className="signin-receipt-total">
-                <span>Total</span>
-                <strong>₹3,698</strong>
-              </div>
-
-              <div className="signin-receipt-foot">
-                <span>
-                  <CheckCircle2 size={14} />
-                  Payment received
-                </span>
-                <span>Cash</span>
-              </div>
-            </div>
+            <MobilePreview />
 
             <div className="signin-highlights">
               <span>
@@ -150,7 +171,7 @@ export default function LoginPage() {
           <footer className="signin-visual-foot">
             <span className="signin-place">
               <MapPin size={14} aria-hidden="true" />
-              Coimbatore, India
+              Kochi, India
             </span>
             <span>Built for independent retailers</span>
           </footer>
@@ -172,12 +193,6 @@ export default function LoginPage() {
           {error && (
             <div className="alert alert-error signin-alert" role="alert">
               {error}
-            </div>
-          )}
-
-          {demoNotice && (
-            <div className="signin-demo-notice" role="status">
-              {demoNotice}
             </div>
           )}
 
@@ -236,50 +251,13 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="signin-demo-label">
-            <span>Quick demo access</span>
+          <div className="signin-security">
+            <ShieldCheck size={15} aria-hidden="true" />
+            <span>Secure sign-in for admin and staff accounts.</span>
           </div>
-
-          <div className="signin-demo-grid">
-            <button
-              type="button"
-              className="signin-demo"
-              onClick={() =>
-                fillDemo("admin@posflow.com", "admin123", "Admin demo")
-              }
-            >
-              <span className="signin-demo-icon" aria-hidden="true">
-                <ShieldCheck size={18} strokeWidth={1.9} />
-              </span>
-              <span className="signin-demo-copy">
-                <strong>Admin</strong>
-                <small>admin@posflow.com</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="signin-demo"
-              onClick={() =>
-                fillDemo("staff@posflow.com", "staff123", "Staff demo")
-              }
-            >
-              <span className="signin-demo-icon" aria-hidden="true">
-                <UserRound size={18} strokeWidth={1.9} />
-              </span>
-              <span className="signin-demo-copy">
-                <strong>Staff</strong>
-                <small>staff@posflow.com</small>
-              </span>
-            </button>
-          </div>
-
-          <p className="signin-demo-note">
-            Pick a demo account to fill the form instantly.
-          </p>
 
           <p className="signin-copyright">
-            © 2026 POSFlow · Coimbatore, India
+            © 2026 POSFlow · Kochi, India
           </p>
         </div>
       </section>

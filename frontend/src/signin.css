@@ -1,8 +1,7 @@
 /* ==========================================================================
    POSFlow sign-in
-   A product-led split screen: live counter preview on the left, access form
-   on the right. Kept separate from the application design system so the
-   entry screen can carry its own visual language.
+   A product-led split screen: a live mobile admin preview on the left and a
+   focused access form on the right.
    ========================================================================== */
 
 .signin-page {
@@ -20,7 +19,7 @@
   color: var(--si-ink);
 }
 
-/* ---------- left: counter preview ---------- */
+/* ---------- left: product preview ---------- */
 
 .signin-visual {
   position: relative;
@@ -105,7 +104,7 @@
 }
 
 .signin-visual-main {
-  margin-top: clamp(38px, 6.5vh, 70px);
+  margin-top: clamp(34px, 5.5vh, 56px);
 }
 
 .signin-kicker {
@@ -136,7 +135,7 @@
   margin: 22px 0 0;
   color: #fff;
   font-family: var(--font);
-  font-size: clamp(40px, 4.3vw, 58px);
+  font-size: clamp(38px, 4vw, 56px);
   font-weight: 800;
   line-height: 1.04;
   letter-spacing: -0.05em;
@@ -147,141 +146,209 @@
 }
 
 .signin-lede {
-  max-width: 460px;
+  max-width: 470px;
   margin-top: 18px;
   color: #94a3b8;
   font-size: 16px;
   line-height: 1.6;
 }
 
-.signin-receipt {
-  width: 100%;
-  max-width: 470px;
-  margin-top: 32px;
-  padding: 18px;
-  border-radius: 16px;
-  background: #fff;
-  color: #0f172a;
-  box-shadow: 0 30px 70px rgba(2, 6, 23, 0.45);
-  transform: rotate(-1.4deg);
+/* mini mobile admin preview */
+
+.signin-device-wrap {
+  position: relative;
+  width: min(100%, 320px);
+  margin: 30px auto 0;
 }
 
-.signin-receipt-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #64748b;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+.signin-phone {
+  width: min(100%, 260px);
+  margin: 0 auto;
+  padding: 8px;
+  border-radius: 32px;
+  background: #070b14;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.48),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transform: rotate(-2.5deg);
 }
 
-.signin-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
+.signin-phone-screen {
+  overflow: hidden;
+  border-radius: 25px;
+  background: #f8fafc;
+}
+
+.signin-phone-notch {
+  width: 54px;
+  height: 4px;
+  margin: 6px auto 5px;
   border-radius: 999px;
-  background: #ecfdf5;
-  color: #047857;
-  font-size: 10px;
-  letter-spacing: 0.02em;
+  background: #0f172a;
+  opacity: 0.8;
 }
 
-.signin-live i {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #10b981;
-}
-
-.signin-receipt-meta {
+.signin-phone-top {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 14px 0 12px;
-  border-bottom: 1px dashed #cbd5e1;
+  padding: 9px 12px;
+  background: var(--si-indigo);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
 }
 
-.signin-receipt-meta > span {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.signin-phone-body {
+  padding: 10px 10px 0;
 }
 
-.signin-receipt-meta small {
-  color: #94a3b8;
-  font-size: 9.5px;
+.signin-phone-greet {
+  color: #64748b;
+  font-size: 6.5px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.signin-receipt-meta strong {
-  color: #1e293b;
-  font-size: 12.5px;
+.signin-phone-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
 }
 
-.signin-receipt-items {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 0;
-  color: #334155;
-  font-size: 12.5px;
+.signin-phone-stat {
+  padding: 7px;
+  border: 1px solid var(--si-line);
+  border-radius: 8px;
+  background: #fff;
 }
 
-.signin-receipt-items > span {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+.signin-phone-stat small {
+  display: block;
+  color: #94a3b8;
+  font-size: 6.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
-.signin-receipt-items b {
+.signin-phone-stat strong {
+  display: block;
+  margin-top: 2px;
   color: #0f172a;
+  font-size: 12.5px;
+  letter-spacing: -0.04em;
 }
 
-.signin-receipt-total {
+.signin-phone-chart {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-top: 10px;
-  border-top: 1px solid #e2e8f0;
-  color: #475569;
-  font-size: 13px;
+  align-items: flex-end;
+  gap: 4px;
+  height: 48px;
+  margin-top: 8px;
+  padding: 7px 8px 0;
+  border: 1px solid var(--si-line);
+  border-radius: 8px;
+  background: #fff;
 }
 
-.signin-receipt-total strong {
-  color: #0f172a;
-  font-size: 24px;
-  letter-spacing: -0.03em;
+.signin-phone-chart i {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: #c7d2fe;
 }
 
-.signin-receipt-foot {
+.signin-phone-chart i:nth-child(6),
+.signin-phone-chart i:nth-child(7) {
+  background: #6366f1;
+}
+
+.signin-phone-section {
+  margin-top: 8px;
+  color: #94a3b8;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signin-phone-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 12px;
-  padding-top: 11px;
-  border-top: 1px dashed #cbd5e1;
-  color: #64748b;
-  font-size: 11px;
+  gap: 6px;
+  margin-top: 5px;
+  padding: 6px 7px;
+  border: 1px solid var(--si-line);
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font-size: 8px;
 }
 
-.signin-receipt-foot > span:first-child {
+.signin-phone-row b {
+  color: #d97706;
+  font-size: 7px;
+  white-space: nowrap;
+}
+
+.signin-phone-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 8px;
+  padding: 7px 4px 8px;
+  border-top: 1px solid var(--si-line);
+  color: #94a3b8;
+}
+
+.signin-phone-tabs svg {
+  width: 12px;
+  height: 12px;
+}
+
+.signin-phone-tabs .active {
+  color: var(--si-indigo);
+}
+
+.signin-float {
+  position: absolute;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  color: #047857;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #fff;
+  color: #334155;
+  font-size: 10px;
   font-weight: 600;
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.35);
+  white-space: nowrap;
+}
+
+.signin-float svg {
+  color: #059669;
+  flex-shrink: 0;
+}
+
+.signin-float-top {
+  top: 22px;
+  right: 0;
+}
+
+.signin-float-bottom {
+  bottom: 38px;
+  left: 0;
 }
 
 .signin-highlights {
   display: flex;
   flex-wrap: wrap;
   gap: 9px;
-  margin-top: 22px;
+  margin-top: 24px;
 }
 
 .signin-highlights > span {
@@ -381,19 +448,8 @@
   font-size: 13px;
 }
 
-.signin-demo-notice {
-  margin-top: 16px;
-  padding: 9px 11px;
-  border: 1px solid #c7d2fe;
-  border-radius: 9px;
-  background: #eef2ff;
-  color: #4338ca;
-  font-size: 12px;
-  line-height: 1.4;
-}
-
 .signin-form {
-  margin-top: 24px;
+  margin-top: 26px;
 }
 
 .signin-field {
@@ -504,93 +560,28 @@
   transform: translateX(2px);
 }
 
-.signin-demo-label {
+.signin-security {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 24px 0 12px;
-  color: #94a3b8;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.signin-demo-label::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--si-line);
-}
-
-.signin-demo-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.signin-demo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid var(--si-line);
-  border-radius: 11px;
-  background: #fff;
-  color: var(--si-ink);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.signin-demo:hover {
-  border-color: #c7d2fe;
-  background: #f8faff;
-}
-
-.signin-demo-icon {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: #eef2ff;
-  color: var(--si-indigo);
-  flex-shrink: 0;
-}
-
-.signin-demo-copy {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.signin-demo-copy strong {
-  font-size: 12.5px;
-  font-weight: 700;
-}
-
-.signin-demo-copy small {
-  overflow: hidden;
-  color: #94a3b8;
-  font-size: 10.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.signin-demo-note {
-  margin-top: 10px;
-  color: #94a3b8;
-  font-size: 11px;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 22px;
+  padding: 10px 12px;
+  border: 1px solid #d1fae5;
+  border-radius: 9px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 11.5px;
   text-align: center;
 }
 
+.signin-security svg {
+  color: #059669;
+  flex-shrink: 0;
+}
+
 .signin-copyright {
-  margin-top: 26px;
+  margin-top: 24px;
   color: #94a3b8;
   font-size: 11px;
   text-align: center;
@@ -627,16 +618,24 @@
   }
 
   .signin-visual h1 {
-    font-size: clamp(38px, 3.8vw, 48px);
+    font-size: clamp(36px, 3.7vw, 48px);
   }
 
   .signin-lede {
     font-size: 15px;
   }
 
-  .signin-receipt {
-    margin-top: 26px;
-    padding: 16px;
+  .signin-device-wrap {
+    width: min(100%, 300px);
+    margin-top: 24px;
+  }
+
+  .signin-phone {
+    width: min(100%, 240px);
+  }
+
+  .signin-highlights {
+    margin-top: 20px;
   }
 
   .signin-panel {
@@ -692,8 +691,8 @@
     font-size: 13.5px;
   }
 
-  .signin-demo-grid {
-    grid-template-columns: 1fr;
+  .signin-security {
+    font-size: 11px;
   }
 
   .signin-copyright {
