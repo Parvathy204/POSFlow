@@ -10,4 +10,10 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
+  preview: {
+    proxy: {
+      // Keep `vite preview` usable for local checks as well
+      '/api': 'http://localhost:5000',
+    },
+  },
 })

@@ -413,6 +413,21 @@
   padding: 18px 0;
 }
 
+.signin-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 24px;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.signin-back:hover {
+  color: var(--si-indigo);
+}
+
 .signin-mobile-brand {
   display: none;
 }

@@ -16,7 +16,15 @@ import BillingPage from "./pages/billing/BillingPage";
 import MobileAdmin from "./pages/mobile/MobileAdmin";
 
 function Protected({ children, role }) {
-  const { user } = useAuth();
+  const { user, checking } = useAuth();
+
+  if (checking) {
+    return (
+      <div className="page">
+        <p className="session-check">Checking your session...</p>
+      </div>
+    );
+  }
 
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role) {
@@ -25,17 +33,11 @@ function Protected({ children, role }) {
   return children;
 }
 
-function HomeRedirect() {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
-  return <Navigate to={user.role === "admin" ? "/admin" : "/billing"} replace />;
-}
-
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<HomeRedirect />} />
 
       {/* Desktop admin portal */}
       <Route

@@ -1,33 +1,69 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Package,
-  Users,
-  Truck,
-  Receipt,
-  Undo2,
-  BookOpen,
   BarChart3,
+  BookOpen,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Receipt,
   ShoppingCart,
   Smartphone,
-  LogOut,
+  Truck,
+  Undo2,
+  Users,
 } from "lucide-react";
 import { useAuth } from "../../auth";
 
-const NAV = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/products", label: "Products", icon: Package },
-  { to: "/admin/staff", label: "Staff", icon: Users },
-  { to: "/admin/suppliers", label: "Suppliers", icon: Truck },
-  { to: "/admin/transactions", label: "Transactions", icon: Receipt },
-  { to: "/admin/returns", label: "Returns", icon: Undo2 },
-  { to: "/admin/ledger", label: "Ledger", icon: BookOpen },
-  { to: "/admin/reports", label: "Reports", icon: BarChart3 },
+const NAV_SECTIONS = [
+  {
+    label: "Workspace",
+    items: [
+      { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+    ],
+  },
+  {
+    label: "Selling",
+    items: [
+      { to: "/billing", label: "Billing counter", icon: ShoppingCart },
+      { to: "/admin/transactions", label: "Transactions", icon: Receipt },
+    ],
+  },
+  {
+    label: "Stockroom",
+    items: [
+      { to: "/admin/products", label: "Products", icon: Package },
+      { to: "/admin/suppliers", label: "Suppliers", icon: Truck },
+    ],
+  },
+  {
+    label: "People",
+    items: [{ to: "/admin/staff", label: "Staff", icon: Users }],
+  },
+  {
+    label: "Accounts",
+    items: [
+      { to: "/admin/returns", label: "Returns", icon: Undo2 },
+      { to: "/admin/ledger", label: "Ledger", icon: BookOpen },
+      { to: "/admin/reports", label: "Reports", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "More",
+    items: [{ to: "/mobile", label: "Mobile admin", icon: Smartphone }],
+  },
 ];
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "AD";
 
   function handleLogout() {
     logout();
@@ -35,51 +71,70 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="shell">
-      <aside className="sidebar no-print">
-        <div className="sidebar-brand">
-          POS<span>Flow</span>
+    <div className="admin-shell">
+      <aside className="admin-sidebar no-print">
+        <div className="admin-brand">
+          <span className="admin-brand-mark" aria-hidden="true">
+            P
+          </span>
+          <span className="admin-brand-copy">
+            <strong>POSFlow</strong>
+            <small>Retail billing suite</small>
+          </span>
         </div>
 
-        <nav>
-          {NAV.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `nav-item${isActive ? " active" : ""}`
-              }
-            >
-              <Icon size={18} />
-              {label}
-            </NavLink>
+        <div className="admin-store">
+          <span className="admin-store-mark" aria-hidden="true">
+            PF
+          </span>
+          <span className="admin-store-copy">
+            <strong>Main store</strong>
+            <small>Kochi, India</small>
+          </span>
+          <span className="admin-store-status" aria-label="Store active" />
+        </div>
+
+        <nav className="admin-nav">
+          {NAV_SECTIONS.map((section) => (
+            <div className="admin-nav-section" key={section.label}>
+              <span className="admin-nav-label">{section.label}</span>
+              {section.items.map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  className={({ isActive }) =>
+                    `admin-nav-item${isActive ? " active" : ""}`
+                  }
+                >
+                  <Icon size={17} />
+                  {label}
+                </NavLink>
+              ))}
+            </div>
           ))}
-
-          <NavLink
-            to="/billing"
-            className="nav-item"
-            style={{ marginTop: 10, border: "1px solid rgba(255,255,255,0.15)" }}
-          >
-            <ShoppingCart size={18} />
-            Billing Portal
-          </NavLink>
-
-          <NavLink to="/mobile" className="nav-item">
-            <Smartphone size={18} />
-            Mobile Admin UI
-          </NavLink>
         </nav>
 
-        <div className="sidebar-foot">
-          <div className="who">{user?.name}</div>
-          <button className="btn btn-secondary btn-sm" onClick={handleLogout} style={{ width: "100%" }}>
-            <LogOut size={15} /> Logout
+        <div className="admin-foot">
+          <span className="admin-avatar" aria-hidden="true">
+            {initials}
+          </span>
+          <span className="admin-foot-copy">
+            <strong>{user?.name}</strong>
+            <small>Administrator</small>
+          </span>
+          <button
+            className="admin-logout"
+            onClick={handleLogout}
+            title="Log out"
+            aria-label="Log out"
+          >
+            <LogOut size={16} />
           </button>
         </div>
       </aside>
 
-      <div className="shell-main">
+      <div className="admin-main">
         <Outlet />
       </div>
     </div>

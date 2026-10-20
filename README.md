@@ -50,9 +50,13 @@ POSFlow covers the full retail billing cycle:
 
 ## 3. Live / demo URL
 
+The root URL opens the sign-in page:
+
+**https://posflow-zj1k.onrender.com/**
+
 | Portal | Live URL |
 | --- | --- |
-| Login | https://posflow-zj1k.onrender.com/login |
+| Sign in | https://posflow-zj1k.onrender.com/login |
 | Admin Portal | https://posflow-zj1k.onrender.com/admin |
 | Billing Portal | https://posflow-zj1k.onrender.com/billing |
 | Mobile Admin UI | https://posflow-zj1k.onrender.com/mobile |

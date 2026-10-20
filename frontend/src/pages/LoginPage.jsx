@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
+  ArrowLeft,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -101,9 +102,29 @@ function MobilePreview() {
   );
 }
 
+const ALLOWED_NEXT_PATHS = ["/admin", "/billing", "/mobile"];
+
+function resolveDestination(user, requestedPath) {
+  const fallback = user.role === "admin" ? "/admin" : "/billing";
+  const target = requestedPath || "";
+  const isAllowed = ALLOWED_NEXT_PATHS.some(
+    (path) => target === path || target.startsWith(`${path}/`)
+  );
+
+  if (!isAllowed) return fallback;
+
+  // Staff accounts only have access to the billing counter.
+  if (user.role !== "admin" && target !== "/billing" && !target.startsWith("/billing/")) {
+    return "/billing";
+  }
+
+  return target;
+}
+
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -117,11 +138,17 @@ export default function LoginPage() {
 
     try {
       const user = await login(email, password);
-      navigate(user.role === "admin" ? "/admin" : "/billing", { replace: true });
+      navigate(resolveDestination(user, searchParams.get("next")), {
+        replace: true,
+      });
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Unable to log in. Please try again."
-      );
+      if (!err.response) {
+        setError("Cannot reach the server. Check your connection and try again.");
+      } else {
+        setError(
+          err.response.data?.message || "Unable to log in. Please try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -180,6 +207,11 @@ export default function LoginPage() {
 
       <section className="signin-panel">
         <div className="signin-form-wrap">
+          <Link to="/" className="signin-back">
+            <ArrowLeft size={14} aria-hidden="true" />
+            Back to website
+          </Link>
+
           <div className="signin-mobile-brand">
             <Brand compact />
           </div>
