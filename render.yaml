@@ -11,7 +11,7 @@ services:
     plan: free
     healthCheckPath: /api/health
     autoDeploy: true
-    buildCommand: npm --prefix backend ci --omit=dev && npm --prefix frontend ci && npm --prefix frontend run build
+    buildCommand: npm --prefix backend ci --omit=dev && npm --prefix frontend ci --include=dev && npm --prefix frontend run build
     startCommand: npm --prefix backend start
     envVars:
       - key: NODE_ENV
