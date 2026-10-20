@@ -7,8 +7,11 @@
  *  - A sample return
  *
  * Reusable: `backend/seed.js` calls this for `npm run seed`, and the server
- * calls it automatically when it falls back to an empty in-memory database.
- * Safe to re-run: it wipes the collections first.
+ * calls it automatically when the database is empty.
+ *
+ * Non-destructive by default: if any user already exists the seed is skipped,
+ * so real data is never overwritten. Pass { force: true } (CLI: --force) to
+ * wipe the collections and re-create the demo dataset.
  */
 const bcrypt = require("bcryptjs");
 
@@ -42,7 +45,16 @@ const SUPPLIERS = [
   { name: "Kanchi Silk Mart", contactPerson: "Venkat Rao", phone: "9876503333", email: "orders@kanchisilk.in", address: "Kanchipuram, Tamil Nadu", gstNumber: "33IJKLM9012H1Z9", notes: "Premium silk sarees" },
 ];
 
-async function seedDatabase() {
+async function seedDatabase({ force = false } = {}) {
+  const existingUsers = await User.countDocuments();
+  if (existingUsers > 0 && !force) {
+    console.log(
+      `Database already contains ${existingUsers} user(s) - skipping demo seed so real data is kept.`
+    );
+    console.log("Run `npm run seed -- --force` to wipe and re-create the demo data.");
+    return { skipped: true };
+  }
+
   console.log("Clearing existing data...");
   await Promise.all([
     User.deleteMany({}),
@@ -275,6 +287,8 @@ async function seedDatabase() {
   console.log("  Admin login : admin@posflow.com / admin123");
   console.log("  Staff login: staff@posflow.com  / staff123");
   console.log("  Staff login: deepa@posflow.com  / staff123");
+
+  return { skipped: false };
 }
 
 module.exports = { seedDatabase };

@@ -22,3 +22,6 @@ Thumbs.db
 
 # Local MongoDB dev data
 .data/
+
+# Database dumps / backups (contain user data)
+.backup/
