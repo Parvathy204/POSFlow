@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowRight,
@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import "../signin.css";
+import api from "../api";
 import { useAuth } from "../auth";
 
 function Brand({ compact = false }) {
@@ -130,6 +131,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Wake a sleeping Render instance while the visitor is typing.
+  useEffect(() => {
+    api.get("/health").catch(() => {});
+  }, []);
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
@@ -143,6 +149,8 @@ export default function LoginPage() {
     } catch (err) {
       if (!err.response) {
         setError("Cannot reach the server. Check your connection and try again.");
+      } else if (err.response.status >= 500) {
+        setError("The server is starting up. Please wait a moment and try again.");
       } else {
         setError(
           err.response.data?.message || "Unable to log in. Please try again."

@@ -58,7 +58,24 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, password) {
-    const response = await api.post("/auth/login", { email, password });
+    let response;
+
+    // Render's free tier can briefly reject requests while waking up. Retry
+    // start-up/network failures, but never retry a genuine wrong-password 401.
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        response = await api.post("/auth/login", { email, password });
+        break;
+      } catch (err) {
+        const status = err.response?.status;
+        const retryable = !err.response || status >= 500;
+
+        if (!retryable || attempt >= 2) throw err;
+
+        await new Promise((resolve) => setTimeout(resolve, 1500 * (attempt + 1)));
+      }
+    }
+
     const { token, user: loggedIn } = response.data;
 
     localStorage.setItem("posToken", token);

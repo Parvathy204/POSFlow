@@ -19,6 +19,16 @@ function sanitize(user) {
   };
 }
 
+function normalizePhone(value) {
+  return value == null ? "" : String(value).trim();
+}
+
+function isValidPhone(value) {
+  return value === "" || /^\d{10}$/.test(value);
+}
+
+const PHONE_ERROR = "Phone number must be exactly 10 digits.";
+
 // List all staff (and admins)
 router.get("/", async (req, res) => {
   try {
@@ -47,14 +57,19 @@ router.post("/", async (req, res) => {
       return res.status(409).json({ message: "Email already in use" });
     }
 
+    const normalizedPhone = normalizePhone(phone);
+    if (!isValidPhone(normalizedPhone)) {
+      return res.status(400).json({ message: PHONE_ERROR });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
-      phone: phone || "",
-     role: "staff",
-isActive: true,
+      phone: normalizedPhone,
+      role: "staff",
+      isActive: true,
     });
 
     res.status(201).json(sanitize(user));
@@ -85,7 +100,13 @@ router.put("/:id", async (req, res) => {
     if (email !== undefined && email.trim()) {
       user.email = email.toLowerCase().trim();
     }
-    if (phone !== undefined) user.phone = phone;
+    if (phone !== undefined) {
+      const normalizedPhone = normalizePhone(phone);
+      if (!isValidPhone(normalizedPhone)) {
+        return res.status(400).json({ message: PHONE_ERROR });
+      }
+      user.phone = normalizedPhone;
+    }
     if (role !== undefined) user.role = role === "admin" ? "admin" : "staff";
     if (isActive !== undefined) user.isActive = Boolean(isActive);
 

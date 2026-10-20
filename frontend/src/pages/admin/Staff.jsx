@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import api from "../../api";
 import Modal from "../../components/Modal";
 import { formatDate } from "../../utils/format";
+import { isValidPhone, phoneDigits, PHONE_ERROR } from "../../utils/phone";
 
 const EMPTY_FORM = { name: "", email: "", password: "", phone: "", role: "staff" };
 
@@ -11,6 +12,7 @@ export default function Staff() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -29,18 +31,31 @@ export default function Staff() {
   function openCreate() {
     setForm(EMPTY_FORM);
     setEditingId(null);
+    setPhoneError("");
     setShowForm(true);
   }
 
   function openEdit(u) {
     setForm({ name: u.name, email: u.email, password: "", phone: u.phone || "", role: u.role });
     setEditingId(u._id || u.id);
+    setPhoneError("");
     setShowForm(true);
+  }
+
+  function handlePhoneChange(value) {
+    const digits = phoneDigits(value);
+    setForm((current) => ({ ...current, phone: digits }));
+    setPhoneError(digits.length > 0 && digits.length !== 10 ? PHONE_ERROR : "");
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    if (!isValidPhone(form.phone)) {
+      setPhoneError(PHONE_ERROR);
+      return;
+    }
 
     try {
       if (editingId) {
@@ -196,9 +211,20 @@ export default function Staff() {
                 <label>Phone</label>
                 <input
                   className="input"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  placeholder="10-digit mobile number"
                   value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  aria-invalid={Boolean(phoneError)}
+                  aria-describedby={phoneError ? "staff-phone-error" : undefined}
                 />
+                {phoneError && (
+                  <p className="field-error" id="staff-phone-error">
+                    {phoneError}
+                  </p>
+                )}
               </div>
               <div className="field">
                 <label>Role</label>
