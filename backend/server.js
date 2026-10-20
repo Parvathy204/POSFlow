@@ -5,6 +5,11 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+// The shop and its daily reports operate in Indian Standard Time. Render
+// provides Linux timezone support; the env var in render.yaml makes this
+// explicit, and this default keeps local/production date buckets consistent.
+process.env.TZ = process.env.TZ || "Asia/Kolkata";
+
 const { connectDB } = require("./config/db");
 
 const authRoutes = require("./routes/auth");
@@ -60,7 +65,13 @@ async function start() {
     const { inMemory } = await connectDB();
 
     if (!process.env.JWT_SECRET) {
-      console.warn("JWT_SECRET is not set - logins will fail until it is configured");
+      if (process.env.NODE_ENV === "production") {
+        throw new Error("JWT_SECRET must be set in production");
+      }
+      process.env.JWT_SECRET = "posflow-local-dev-only-secret";
+      console.warn(
+        "JWT_SECRET is not set - using a development-only secret. Set JWT_SECRET for production."
+      );
     }
 
     // A fresh database (new Atlas cluster, or the in-memory dev fallback)

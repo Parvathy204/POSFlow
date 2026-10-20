@@ -30,7 +30,10 @@ router.get("/dashboard", async (req, res) => {
           { $group: { _id: null, total: { $sum: "$totalAmount" }, count: { $sum: 1 } } },
         ]),
         Product.countDocuments({ isActive: true }),
-        Product.find({ isActive: true, stock: { $lte: 5 } })
+        Product.find({
+          isActive: true,
+          $expr: { $lte: ["$stock", { $ifNull: ["$lowStockThreshold", 5] }] },
+        })
           .sort({ stock: 1 })
           .limit(10)
           .select("name sku stock price"),
@@ -221,7 +224,10 @@ router.get("/inventory", async (req, res) => {
           },
         },
       ]),
-      Product.find({ isActive: true, stock: { $lte: 5 } }).sort({ stock: 1 }),
+      Product.find({
+        isActive: true,
+        $expr: { $lte: ["$stock", { $ifNull: ["$lowStockThreshold", 5] }] },
+      }).sort({ stock: 1 }),
       Product.aggregate([
         { $match: { isActive: true } },
         {

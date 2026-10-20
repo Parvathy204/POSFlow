@@ -68,6 +68,7 @@ async function seedDatabase({ force = false } = {}) {
   console.log("Creating users...");
   const password = await bcrypt.hash("admin123", 12);
   const staffPassword = await bcrypt.hash("staff123", 12);
+  const pranuPassword = await bcrypt.hash("kannan12", 12);
 
   const admin = await User.create({
     name: "Priya Menon",
@@ -93,6 +94,15 @@ async function seedDatabase({ force = false } = {}) {
     role: "staff",
   });
 
+  // Keep the documented second staff login available in a freshly seeded DB.
+  const staff3 = await User.create({
+    name: "Pranav",
+    email: "pranu12@gmail.com",
+    password: pranuPassword,
+    phone: "9000000004",
+    role: "staff",
+  });
+
   console.log("Creating suppliers...");
   const suppliers = await Supplier.create(SUPPLIERS);
 
@@ -106,7 +116,7 @@ async function seedDatabase({ force = false } = {}) {
 
   console.log("Creating sample transactions...");
   const methods = ["Cash", "UPI", "Card"];
-  const staffPool = [staff1._id, staff2._id];
+  const staffPool = [staff1._id, staff2._id, staff3._id];
   const customers = [
     ["Walk-in Customer", ""],
     ["Sunita R.", "9812345670"],
@@ -287,6 +297,7 @@ async function seedDatabase({ force = false } = {}) {
   console.log("  Admin login : admin@posflow.com / admin123");
   console.log("  Staff login: staff@posflow.com  / staff123");
   console.log("  Staff login: deepa@posflow.com  / staff123");
+  console.log("  Staff login: pranu12@gmail.com  / kannan12");
 
   return { skipped: false };
 }

@@ -20,6 +20,8 @@ services:
         generateValue: true
       - key: MONGO_URI
         sync: false
+      - key: TZ
+        value: Asia/Kolkata
       # Seed the demo accounts/products the first time the database is empty
       # so the portals are testable right after the deploy.
       - key: SEED_DEMO_DATA

@@ -8,10 +8,6 @@ const LedgerEntry = require("../models/LedgerEntry");
 const { authenticateToken, requireAdmin } = require("../middleware/auth");
 const { runInTransaction } = require("../lib/txn");
 
-router.get("/test", (req, res) => {
-  res.json({ message: "Transactions route is working!" });
-});
-
 router.use(authenticateToken);
 
 // List transactions. Admins see everything; staff see only their own.
@@ -114,6 +110,7 @@ router.post("/", async (req, res) => {
   try {
     const savedTransaction = await runInTransaction(async (session) => {
       const receiptItems = [];
+      const stockUpdates = [];
       let subtotal = 0;
 
       for (const [productId, quantity] of quantities) {
@@ -130,9 +127,7 @@ router.post("/", async (req, res) => {
         const price = Number(product.price);
         const lineSubtotal = price * quantity;
 
-        product.stock -= quantity;
-        await product.save({ session });
-
+        stockUpdates.push({ product, quantity });
         receiptItems.push({
           productId: product._id,
           name: product.name,
@@ -151,8 +146,24 @@ router.post("/", async (req, res) => {
       const taxAmount = Math.round(taxable * numericTaxRate) / 100;
       const totalAmount = taxable + taxAmount;
 
-      const paid = paymentMethod === "Cash" ? Number(amountPaid) || totalAmount : totalAmount;
+      let paid = totalAmount;
+      if (paymentMethod === "Cash") {
+        paid =
+          amountPaid === undefined || amountPaid === null || amountPaid === ""
+            ? totalAmount
+            : Number(amountPaid);
+        if (!Number.isFinite(paid) || paid < totalAmount) {
+          throw new Error("Cash received is less than the bill total.");
+        }
+      }
       const changeReturned = paid > totalAmount ? paid - totalAmount : 0;
+
+      // Validate the whole bill before moving stock, so a rejected payment
+      // cannot leave a partial stock update on a non-transactional dev DB.
+      for (const { product, quantity } of stockUpdates) {
+        product.stock -= quantity;
+        await product.save({ session });
+      }
 
       const invoiceNumber = `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 

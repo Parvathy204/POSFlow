@@ -11,7 +11,6 @@ import {
   Undo2,
   BookOpen,
   Plus,
-  X,
   Monitor,
   LogOut,
   Search,

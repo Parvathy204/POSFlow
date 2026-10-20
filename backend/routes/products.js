@@ -7,6 +7,10 @@ const {
 
 const router = express.Router();
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 router.use(authenticateToken);
 
 // View all products (any signed-in user - the billing portal needs this)
@@ -15,14 +19,16 @@ router.get("/", async (req, res) => {
     const { search, category, lowStock } = req.query;
 
     const filter = {};
-    if (search) {
-      filter.$or = [
-        { name: new RegExp(search.trim(), "i") },
-        { sku: new RegExp(search.trim(), "i") },
-      ];
+    if (search?.trim()) {
+      const term = new RegExp(escapeRegex(search.trim()), "i");
+      filter.$or = [{ name: term }, { sku: term }];
     }
     if (category) filter.category = category;
-    if (lowStock === "true") filter.stock = { $lte: 5 };
+    if (lowStock === "true") {
+      filter.$expr = {
+        $lte: ["$stock", { $ifNull: ["$lowStockThreshold", 5] }],
+      };
+    }
 
     const products = await Product.find(filter)
       .sort({ createdAt: -1 })

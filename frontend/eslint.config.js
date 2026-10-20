@@ -17,5 +17,12 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Fetch-on-mount is the app's standard data-loading pattern. The React
+      // Compiler hint is useful for new code, but flags the existing pattern.
+      'react-hooks/set-state-in-effect': 'off',
+      // AuthProvider and the useAuth hook intentionally share auth.jsx.
+      'react-refresh/only-export-components': 'off',
+    },
   },
 ])
