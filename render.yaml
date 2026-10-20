@@ -8,8 +8,11 @@ services:
   - type: web
     name: posflow
     runtime: node
-    buildCommand: cd backend && npm install && cd ../frontend && npm install && npm run build
-    startCommand: cd backend && npm start
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
+    buildCommand: npm --prefix backend ci --omit=dev && npm --prefix frontend ci && npm --prefix frontend run build
+    startCommand: npm --prefix backend start
     envVars:
       - key: NODE_ENV
         value: production
@@ -17,5 +20,7 @@ services:
         generateValue: true
       - key: MONGO_URI
         sync: false
-      - key: PORT
-        value: 10000
+      # Seed the demo accounts/products the first time the database is empty
+      # so the portals are testable right after the deploy.
+      - key: SEED_DEMO_DATA
+        value: "true"

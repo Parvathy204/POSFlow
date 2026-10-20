@@ -51,13 +51,20 @@ async function start() {
   try {
     const { inMemory } = await connectDB();
 
-    // The in-memory fallback starts empty every run, so auto-seed it once so
-    // the demo accounts and products always exist for reviewers.
-    if (inMemory) {
+    if (!process.env.JWT_SECRET) {
+      console.warn("JWT_SECRET is not set - logins will fail until it is configured");
+    }
+
+    // A fresh database (new Atlas cluster, or the in-memory dev fallback)
+    // starts empty, so seed the demo accounts/products once. This keeps a
+    // just-deployed instance immediately testable.
+    if (process.env.SEED_DEMO_DATA !== "false") {
       const User = require("./models/user");
       const userCount = await User.countDocuments();
       if (userCount === 0) {
-        console.log("Empty in-memory database - seeding demo data...");
+        console.log(
+          `Empty database${inMemory ? " (in-memory)" : ""} - seeding demo data...`
+        );
         const { seedDatabase } = require("./lib/seedData");
         await seedDatabase();
       }
